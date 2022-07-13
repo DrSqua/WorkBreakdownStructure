@@ -64,7 +64,8 @@ public:
     void addConnection(int nodeID, const std::vector<int>& connections);
     void addNode(const Node& node);
 
-    std::vector<int> getStartNodes() const;
+    std::vector<int> toposort() const;
+    [[nodiscard]] std::vector<int> getStartNodes() const;
     std::vector<int>& getAdjacent(int nodeID);
 
     //! Print

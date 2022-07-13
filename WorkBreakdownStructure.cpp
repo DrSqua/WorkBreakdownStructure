@@ -54,8 +54,6 @@ void WorkBreakdownStructure::doTheThing() {
     wbStree.setTree(nodeVector);
     wbStree.printWBSTree();
 
-    int start_node = 0;
-
     auto [time, path] = calculateLongestPath(*this, wbStree);
     std::cout << std::endl << "Time: " << time << std::endl;
     std::cout << "Path taken:" << std::endl;

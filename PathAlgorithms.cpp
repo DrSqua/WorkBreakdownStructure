@@ -4,26 +4,6 @@
 
 #include "WorkBreakdownStructure.h"
 
-int getLargestUnvisited(WorkBreakdownStructure& workBreakdownStructure, const std::vector<bool>& visitedVector)
-{
-    auto nodeVector = workBreakdownStructure.getNodeVectorPtr();
-
-    auto largestUnvisitedNode = *std::max_element(nodeVector.begin(), nodeVector.end(), [visitedVector](const std::shared_ptr<Node>& lhs, const std::shared_ptr<Node>& rhs)
-        {
-        //! If one of nodes is visited, it is "lower" than the other
-        if (visitedVector.at(lhs->getNodeID()) && visitedVector.at(!rhs->getNodeID())) {
-            return true;
-        }
-        else if (!visitedVector.at(lhs->getNodeID()) && visitedVector.at(rhs->getNodeID())) {
-            return false;
-        }
-        //! If both values are either visited or unvisited, compare durations
-        return (lhs->getNodeDuration() < rhs->getNodeDuration());
-        });
-
-    return largestUnvisitedNode->getNodeID();
-}
-
 /**
  *
  * @param workBreakdownStructure
@@ -38,23 +18,20 @@ std::pair<double, std::vector<int>> calculateLongestPath(WorkBreakdownStructure&
     // Establishing variables
     const auto nodeCount = workBreakdownStructure.getNodeVectorSize();
     const auto startNodeIDVector = wbsTree.getStartNodes();
+    const auto toposortedVector = wbsTree.toposort();
 
     std::vector<double> distanceVector(nodeCount, -1.0); // For each node (with access on index) stores the distance to starting node
     std::vector<int> previousNodeVector(nodeCount, -1.0); // For each node (with access on index) stores the previous Node to create longest path
     std::vector<bool> visitedVector(nodeCount); // For each node (with access on index) stores if it has been visited
 
-    std::deque<int> nodeQueue;
-    nodeQueue.push_back(*std::max_element(startNodeIDVector.begin(), startNodeIDVector.end()));
     for (auto startNodeID : startNodeIDVector) {
         distanceVector.at(startNodeID) = workBreakdownStructure.getNodeDuration(startNodeID);
     }
 
     // Loop
-    while (!nodeQueue.empty())
+    for (const auto currentNodeID : toposortedVector)
     {
         // Get next node, remove it from queue and set it to visited
-        auto currentNodeID = nodeQueue.front();
-        nodeQueue.pop_front();
         visitedVector.at(currentNodeID) = true;
 
         // Visit each connection
@@ -69,12 +46,6 @@ std::pair<double, std::vector<int>> calculateLongestPath(WorkBreakdownStructure&
                 distanceVector.at(connectedNodeID) = distance;
                 previousNodeVector.at(connectedNodeID) = currentNodeID;
             }
-        }
-        // Check if all nodes are visited
-        if (std::find(visitedVector.begin(), visitedVector.end(), false) != visitedVector.end()) {
-
-            // Get next node to visit
-            nodeQueue.push_back(getLargestUnvisited(workBreakdownStructure, visitedVector));
         }
     }
 
