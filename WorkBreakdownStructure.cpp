@@ -75,8 +75,8 @@ std::vector<std::shared_ptr<Node>>& WorkBreakdownStructure::getNodeVectorPtr() {
     return nodeVector;
 }
 
-std::vector<std::shared_ptr<Node>> WorkBreakdownStructure::getNodeFromNodeID(const std::vector<int> &nodeIDVector) {
-    std::vector<std::shared_ptr<Node>> result_vector{};
+std::vector<std::weak_ptr<Node>> WorkBreakdownStructure::getNodeFromNodeID(const std::vector<int> &nodeIDVector) {
+    std::vector<std::weak_ptr<Node>> result_vector{};
 
     result_vector.reserve(nodeIDVector.size());
     for (auto nodeID : nodeIDVector) {
@@ -100,4 +100,14 @@ std::string WorkBreakdownStructure::getNodeName(int nodeID) const {
 std::string *WorkBreakdownStructure::getNodeIDstr(int nodeID) const {
 
     return nullptr;
+}
+
+std::vector<int> WorkBreakdownStructure::getConnections(const std::shared_ptr<Node>& node) {
+    std::vector<int> connections;
+
+    for (const auto& curNode : nodeVector) {
+
+    }
+
+    return connections;
 }

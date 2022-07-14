@@ -64,7 +64,7 @@ public:
     void addConnection(int nodeID, const std::vector<int>& connections);
     void addNode(const Node& node);
 
-    std::vector<int> toposort() const;
+    [[nodiscard]] std::vector<int> toposort() const;
     [[nodiscard]] std::vector<int> getStartNodes() const;
     std::vector<int>& getAdjacent(int nodeID);
 
@@ -100,10 +100,11 @@ public:
     [[nodiscard]] int getNodeID(const std::string& ID_string);
     [[nodiscard]] std::string* getNodeIDstr(int nodeID) const;
     [[nodiscard]] std::string getNodeName(int nodeID) const;
-    std::vector<std::shared_ptr<Node>> getNodeFromNodeID(const std::vector<int>& nodeIDVector);
+    std::vector<std::weak_ptr<Node>> getNodeFromNodeID(const std::vector<int>& nodeIDVector);
 
-    //! Solving WBS
+    //! Solving Problems
     void doTheThing(); // Temp function
+    std::vector<int> getConnections(const std::shared_ptr<Node>& node);
 
 
     //! Print
