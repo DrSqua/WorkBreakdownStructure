@@ -1,6 +1,8 @@
 #include <iostream>
 
 #include "WorkBreakdownStructure.h"
+#include "Rendering/Rendering.h"
+#include "WBSFilesystem/WBSFilesystem.h"
 
 void insertTestCase2(WorkBreakdownStructure& workBreakdownStructure) {
     Node node_0({"A"}, "Contour uitzetten", 6, {}, workBreakdownStructure);
@@ -10,12 +12,12 @@ void insertTestCase2(WorkBreakdownStructure& workBreakdownStructure) {
     Node node_4({"E"}, "Wapening en buizen plaatsen", 4, {"D"}, workBreakdownStructure);
     Node node_5({"F"}, "Gieten en uitharden beton", 10, {"E"}, workBreakdownStructure);
     Node node_6({"G"}, "sterfput plaatsen", 2, {}, workBreakdownStructure);
-    Node node_7({"H"}, "iets", 10, {"G"}, workBreakdownStructure);
-    Node node_8({"I"}, "iets", 6, {"H", "J"}, workBreakdownStructure);
-    Node node_9({"J"}, "iets", 13, {}, workBreakdownStructure);
-    Node node_10({"K"}, "iets", 9, {"A"}, workBreakdownStructure);
-    Node node_11({"L"}, "iets", 3, {"C", "K"}, workBreakdownStructure);
-    Node node_12({"M"}, "iets", 5, {"I", "L"}, workBreakdownStructure);
+    Node node_7({"H"}, "ietsH", 10, {"G"}, workBreakdownStructure);
+    Node node_8({"I"}, "ietsI", 6, {"H", "J"}, workBreakdownStructure);
+    Node node_9({"J"}, "ietsJ", 13, {}, workBreakdownStructure);
+    Node node_10({"K"}, "ietsK", 9, {"A"}, workBreakdownStructure);
+    Node node_11({"L"}, "ietsL", 3, {"C", "K"}, workBreakdownStructure);
+    Node node_12({"M"}, "ietsM", 5, {"I", "L"}, workBreakdownStructure);
 
     workBreakdownStructure.insertNode(node_0);
     workBreakdownStructure.insertNode(node_1);
@@ -47,16 +49,18 @@ void insertTestCase1(WorkBreakdownStructure& workBreakdownStructure) {
 
 int main() {
 
-    WorkBreakdownStructure workBreakdownStructure;
+    int screenWidth = 600;
+    int screenHeight = 400;
 
-    // insertTestCase1(workBreakdownStructure);
-    insertTestCase2(workBreakdownStructure);
+    std::string filename = "Construction";
+    WorkBreakdownStructure workBreakdownStructureCSV = create_wbs(getCSVFilepathFromFilename(filename));
 
-    workBreakdownStructure.printNodeList();
+    workBreakdownStructureCSV.printNodeList();
     std::cout << std::endl;
-    workBreakdownStructure.doTheThing();
 
-    // graphmain();
+
+    workBreakdownStructureCSV.printSolvedWbsStructure(workBreakdownStructureCSV.solveWbsStructrure());
+    WbsDisplayClass wbsDisplayClass(screenWidth, screenHeight, workBreakdownStructureCSV);
 
     return 0;
 }

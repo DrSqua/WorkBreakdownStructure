@@ -4,11 +4,11 @@
 
 #include "WorkBreakdownStructure.h"
 
-WBSTree::WBSTree(const std::vector<std::shared_ptr<Node>>& raw_nodeVector) {
-    setTree(raw_nodeVector);
+WBSGraph::WBSGraph(const std::vector<std::shared_ptr<Node>>& raw_nodeVector) {
+    setGraph(raw_nodeVector);
 }
 
-void WBSTree::printWBSTree() {
+void WBSGraph::printWBSGraph() {
     int i{};
     for (auto& edge_vector : adjList) {
         if (filledNodes <= i) return;
@@ -19,11 +19,11 @@ void WBSTree::printWBSTree() {
     }
 }
 
-void WBSTree::addNode(const Node& node) {
+void WBSGraph::addNode(const Node& node) {
 
 }
 
-void WBSTree::addConnection(int nodeID, const std::vector<int>& connections) {
+void WBSGraph::addConnection(int nodeID, const std::vector<int>& connections) {
     if (filledNodes < nodeID) return;
 
     for (auto required_nodeID : connections) {
@@ -33,7 +33,7 @@ void WBSTree::addConnection(int nodeID, const std::vector<int>& connections) {
     }
 }
 
-void WBSTree::setTree(const std::vector<std::shared_ptr<Node>>& raw_nodeVector) {
+void WBSGraph::setGraph(const std::vector<std::shared_ptr<Node>>& raw_nodeVector) {
     filledNodes = raw_nodeVector.size();
     for (auto& node : raw_nodeVector) {
         auto node_id = node->getNodeID();
@@ -44,16 +44,17 @@ void WBSTree::setTree(const std::vector<std::shared_ptr<Node>>& raw_nodeVector) 
     }
 }
 
-std::vector<int> &WBSTree::getAdjacent(int nodeID) {
+std::vector<int> &WBSGraph::getRightAdjacent(int nodeID) {
     return adjList.at(nodeID);
 }
 
-std::vector<int> WBSTree::getStartNodes() const {
+std::vector<int> WBSGraph::getStartNodes() const {
     std::vector<bool> hasConnectionVector(filledNodes);
     std::vector<int> startNodes{};
 
     for (auto& connectionsVector : adjList) {
         for (auto connectionID : connectionsVector) {
+            if (connectionID > filledNodes) throw std::invalid_argument("WBSGraph::getStartNodes() bug");
             hasConnectionVector.at(connectionID) = true;
         }
     }
@@ -68,12 +69,12 @@ std::vector<int> WBSTree::getStartNodes() const {
  * Function works in reverse order
  * @return
  */
-std::vector<int> WBSTree::toposort() const {
+std::vector<int> WBSGraph::toposort() const {
     std::vector<int> sortedVector{};
     std::vector<bool> visitedNodes(filledNodes);
 
-    while (sortedVector.size() != filledNodes) {
-        // While not sorted, loop through adjList
+    while (sortedVector.size() < filledNodes) {
+        // While not sorted, loop through adjList (while size of sorted list is not equal to total node count)
         for (auto index=0; index<filledNodes; ++index) {
             auto vertices = adjList.at(index);
 

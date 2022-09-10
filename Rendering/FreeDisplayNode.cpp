@@ -4,7 +4,7 @@
 
 #include "Rendering.h"
 
-FreeDisplayNode::FreeDisplayNode(std::shared_ptr<Node> wbs_node, const std::vector<int>& connections, int n_xPos, int n_yPos) : DisplayNode(std::move(wbs_node), connections, n_xPos, n_yPos) {
+FreeDisplayNode::FreeDisplayNode(std::shared_ptr<Node> wbs_node, std::vector<int>& connections, int n_xPos, int n_yPos) : DisplayNode(std::move(wbs_node), connections, n_xPos, n_yPos) {
 
 }
 

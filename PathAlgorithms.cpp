@@ -4,6 +4,7 @@
 
 #include "WorkBreakdownStructure.h"
 
+// TODO Eens kijken of ik het kan schrijven zonder de toposort vooraf
 /**
  *
  * @param workBreakdownStructure
@@ -11,11 +12,14 @@
  * @param startNodeID
  * @return
  */
-std::pair<double, std::vector<int>> calculateLongestPath(WorkBreakdownStructure& workBreakdownStructure, WBSTree& wbsTree) {
+std::pair<double, std::vector<int>> calculateLongestPath(WorkBreakdownStructure& workBreakdownStructure, WBSGraph& wbsTree) {
+    if (workBreakdownStructure.getNodeVectorSize() < 1) return {};
+
     // Establishing return values
     std::vector<int> path;
+    double total_distance;
 
-    // Establishing variables
+    // Establishing function variables
     const auto nodeCount = workBreakdownStructure.getNodeVectorSize();
     const auto startNodeIDVector = wbsTree.getStartNodes();
     const auto toposortedVector = wbsTree.toposort();
@@ -28,7 +32,7 @@ std::pair<double, std::vector<int>> calculateLongestPath(WorkBreakdownStructure&
         distanceVector.at(startNodeID) = workBreakdownStructure.getNodeDuration(startNodeID);
     }
 
-    // Loop
+    // Solving the WBS
     for (const auto currentNodeID : toposortedVector)
     {
         // Get next node, remove it from queue and set it to visited
@@ -36,7 +40,7 @@ std::pair<double, std::vector<int>> calculateLongestPath(WorkBreakdownStructure&
 
         // Visit each connection
         double distance;
-        for (auto connectedNodeID : wbsTree.getAdjacent(currentNodeID))
+        for (auto connectedNodeID : wbsTree.getRightAdjacent(currentNodeID))
         {
             // Distance = distance_to_currentNode + length_of_connectedNode
             distance = distanceVector.at(currentNodeID) + workBreakdownStructure.getNodeDuration(connectedNodeID);
@@ -50,7 +54,7 @@ std::pair<double, std::vector<int>> calculateLongestPath(WorkBreakdownStructure&
     }
 
     auto nodeID = std::max_element(distanceVector.begin(), distanceVector.end()) - distanceVector.begin();
-    auto distance = distanceVector.at(nodeID);
+    total_distance = distanceVector.at(nodeID);
     // Getting the path
     while (nodeID != -1)
     {
@@ -59,5 +63,9 @@ std::pair<double, std::vector<int>> calculateLongestPath(WorkBreakdownStructure&
     }
     std::reverse(path.begin(), path.end());
 
-    return std::make_pair(distance, path);
+    return std::make_pair(total_distance, path);
+}
+
+bool isDAG(WorkBreakdownStructure &workBreakdownStructure, WBSGraph &wbsTree) {
+    return false;
 }

@@ -9,11 +9,14 @@
 
 #include "../WorkBreakdownStructure.h"
 
+constexpr static int LINK_FORCE = 1;
+constexpr static int REPEL_FORCE = 1;
+
 class DisplayNode {
 public:
-    DisplayNode(std::shared_ptr<Node> wbs_node, const std::vector<int>& connections, int n_xPos, int n_yPos);
-    inline int getWbsNodeID();
+    DisplayNode(std::shared_ptr<Node> wbs_node, std::vector<int>& connections, int n_xPos, int n_yPos);
 
+    virtual int getWbsNodeID(); // TODO Inline maken?
     virtual void renderToSurface() {}
     virtual void applyMovement(const std::vector<std::unique_ptr<DisplayNode>>& displayNodeVector) {}
 
@@ -26,7 +29,7 @@ protected:
 
 class FreeDisplayNode : private DisplayNode {
 public:
-    FreeDisplayNode(std::shared_ptr<Node> wbs_node, const std::vector<int>& connections, int n_xPos, int n_yPos);
+    FreeDisplayNode(std::shared_ptr<Node> wbs_node, std::vector<int>& connections, int n_xPos, int n_yPos);
     void renderToSurface() override;
     void applyMovement(const std::vector<std::unique_ptr<DisplayNode>>& displayNodeVector) override;
 
@@ -39,6 +42,8 @@ class StaticDisplayNode : private DisplayNode {};
 class WbsDisplayClass {
 public:
     WbsDisplayClass(int n_screenWidth, int n_screenHeight, WorkBreakdownStructure& workBreakdownStructure);
+    void updateDisplayNodes();
+    void drawDisplayNodes();
 
 private:
     // Objects
