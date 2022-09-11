@@ -1,0 +1,14 @@
+﻿NodeID,Description,Duration,Requirements
+A,Contour Uitzetten,6,""
+B,Werfkeet Plaatsen,4,A
+C,Gereedschap Aanvoeren,7,B
+D,Uitgraven,2,A
+E,Wapening en buizen plaatsen,4,D
+F,Giet en uitharden beton,10,E
+G,sterfput plaatsen,2,
+H,ietsH,10,G
+I,ietsI,6,"H,J"
+J,ietsJ,13,
+K,ietsK,9,A
+L,ietsL,3,"C,K"
+M,ietsM,5,"I,L"
